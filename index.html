@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capstone Title Generator</title>
+    
+    <style>
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #222;
+            --button-bg: #007bff;
+            --button-text: white;
+            --input-bg: white;
+            --input-text: black;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --border-color: #ddd;
+        }
+    
+        .dark-mode {
+            --bg-color: #181818;
+            --text-color: #f0f0f0;
+            --button-bg: #1e88e5;
+            --button-text: white;
+            --input-bg: #2a2a2a;
+            --input-text: white;
+            --card-bg: #242424;
+            --shadow: rgba(255, 255, 255, 0.1);
+            --border-color: #444;
+        }
+    
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+    
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s, border 0.3s;
+        }
+    
+        input {
+            padding: 12px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background: var(--input-bg);
+            color: var(--input-text);
+            transition: background 0.3s, color 0.3s, border 0.3s;
+        }
+    
+        button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+    
+        button:hover {
+            background-color: #0056b3;
+        }
+    
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    
+        .titles-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 100%;
+            gap: 20px;
+        }
+    
+        .title-section {
+            flex: 1;
+            text-align: left;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s, border 0.3s;
+        }
+    
+        .title-category {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            transition: background 0.3s;
+        }
+    
+        .title-card {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s, border 0.3s;
+        }
+    
+        .title-description {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+    
+        /* Toggle Switch */
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+    
+        .theme-switch input {
+            display: none;
+        }
+    
+        .slider {
+            width: 40px;
+            height: 20px;
+            background: var(--border-color);
+            border-radius: 10px;
+            position: relative;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+    
+        .slider::before {
+            content: "";
+            width: 18px;
+            height: 18px;
+            background: white;
+            position: absolute;
+            border-radius: 50%;
+            top: 1px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+    
+        input:checked + .slider {
+            background: #007bff;
+        }
+    
+        input:checked + .slider::before {
+            transform: translateX(20px);
+        }
+    
+        /* Responsive: Stack on small screens */
+        @media (max-width: 768px) {
+            .titles-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Capstone Title Generator</h1>
+        
+        <label class="theme-switch">
+            <input type="checkbox" id="modeToggle">
+            <span class="slider"></span> Dark Mode
+        </label>
+
+        <input type="text" id="topic" placeholder="Enter your topic...">
+        <button id="generateButton" onclick="generateTitles()">Generate Titles</button>
+
+        <div class="titles-container">
+            <div class="title-section">
+                <div class="title-category">📱 Mobile Application Ideas</div>
+                <div id="mobileTitles"></div>
+            </div>
+
+            <div class="title-section">
+                <div class="title-category">💻 Web Application Ideas</div>
+                <div id="webTitles"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const modeToggle = document.getElementById("modeToggle");
+            modeToggle.addEventListener("change", function() {
+                document.body.classList.toggle("dark-mode");
+                localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+            });
+            if (localStorage.getItem("darkMode") === "true") {
+                document.body.classList.add("dark-mode");
+                modeToggle.checked = true;
+            }
+        });
+
+        async function generateTitles() {
+            const topic = document.getElementById("topic").value.trim();
+            const button = document.getElementById("generateButton");
+            const mobileTitlesContainer = document.getElementById("mobileTitles");
+            const webTitlesContainer = document.getElementById("webTitles");
+
+            if (!topic) {
+                alert("Please enter a topic.");
+                return;
+            }
+
+            button.disabled = true;
+            button.innerText = "Generating...";
+            mobileTitlesContainer.innerHTML = "";
+            webTitlesContainer.innerHTML = "";
+
+            try {
+                const response = await fetch("http://localhost:5000/generate-title", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ topic })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch titles");
+                }
+
+                const data = await response.json();
+                console.log("📜 Response Data:", data);
+
+                if (!data.mobileTitles || !Array.isArray(data.mobileTitles) || 
+                    !data.webTitles || !Array.isArray(data.webTitles)) {
+                    throw new Error("Invalid response format");
+                }
+
+                const createTitleCard = (titleObj) => {
+                    const div = document.createElement("div");
+                    div.classList.add("title-card");
+                    div.innerHTML = `<strong>${titleObj.title}</strong><p class="title-description">${titleObj.description}</p>`;
+                    return div;
+                };
+
+                data.mobileTitles.forEach(titleObj => mobileTitlesContainer.appendChild(createTitleCard(titleObj)));
+                data.webTitles.forEach(titleObj => webTitlesContainer.appendChild(createTitleCard(titleObj)));
+
+            } catch (error) {
+                console.error("❌ Error generating titles:", error);
+                alert("Failed to generate titles. Please try again.");
+            }
+
+            button.disabled = false;
+            button.innerText = "Generate Titles";
+        }
+    </script>
+</body>
+</html>
